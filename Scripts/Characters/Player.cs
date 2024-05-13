@@ -14,16 +14,21 @@ public partial class Player : CharacterBody2D
     [Export(PropertyHint.Range, "1,1000,1")]
     private float jumpStrength = 600f;
 
+    [Export(PropertyHint.Range, "1,10,1")]
+    private int maxJumps = 2;
+
     [Export]
     private AnimatedSprite2D playerSprite;
 
     private Vector2 initialSpriteScale;
-
+    private int jumpCount = 0;
     public override void _Ready()
     {
         base._Ready();
         initialSpriteScale = playerSprite.Scale;
+        playerSprite.AnimationFinished += PlayerSprite_AnimationFinished;
     }
+
 
     public override void _PhysicsProcess(double delta)
 	{
@@ -35,13 +40,32 @@ public partial class Player : CharacterBody2D
 
         var isFalling = Velocity.Y > 0 && !IsOnFloor();
         var isJumping = Input.IsActionJustPressed(Constants.INPUT_JUMP) && IsOnFloor();
+        var isDoubleJumping = Input.IsActionJustPressed(Constants.INPUT_JUMP) && isFalling;
         var isJumpCancelled = Input.IsActionJustReleased(Constants.INPUT_JUMP) && Velocity.Y < 0;
         var isIdle = IsOnFloor() && Mathf.IsZeroApprox(Velocity.X);
         var isWalking = IsOnFloor() && !Mathf.IsZeroApprox(Velocity.X);
 
         if (isJumping)
         {
+            jumpCount++;
             yVelocity = -jumpStrength;
+        }
+        else if ( isDoubleJumping)
+        {
+            jumpCount++;
+            if(jumpCount <= maxJumps)
+            {
+                yVelocity = -jumpStrength;
+            }
+        }
+        else if(isJumpCancelled)
+        {
+            yVelocity = 0;
+        }
+
+        else if (IsOnFloor())
+        {
+            jumpCount = 0;
         }
 
         Velocity = new Vector2(xVelocity, yVelocity);
@@ -52,6 +76,11 @@ public partial class Player : CharacterBody2D
         {
             GD.Print($"Playing " + Constants.ANIMATION_JUMP_START);
             playerSprite.Play(Constants.ANIMATION_JUMP_START);
+        }
+        if (isDoubleJumping)
+        {
+            GD.Print($"Playing " + Constants.ANIMATION_DOUBLE_JUMP_START);
+            playerSprite.Play(Constants.ANIMATION_DOUBLE_JUMP_START);
         }
         else if(isWalking)
         {
@@ -72,6 +101,7 @@ public partial class Player : CharacterBody2D
         }
 
 
+
         if (Mathf.IsZeroApprox(horizontalInput))
         {
             return;
@@ -86,4 +116,10 @@ public partial class Player : CharacterBody2D
             playerSprite.Scale = initialSpriteScale;
         }
 	}
+
+
+    private void PlayerSprite_AnimationFinished()
+    {
+        playerSprite.Play(Constants.ANIMATION_JUMP);
+    }
 }

@@ -315,5 +315,6 @@ shape = SubResource("RectangleShape2D_24ej5")
 position = Vector2(0, -30)
 scale = Vector2(0.1, 0.1)
 sprite_frames = SubResource("SpriteFrames_b3o1j")
-animation = &"Walk"
+animation = &"JumpStart"
 autoplay = "Idle"
+frame_progress = 0.696432
