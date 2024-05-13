@@ -1,6 +1,7 @@
-[gd_scene load_steps=69 format=3 uid="uid://3mfb0sd1gh76"]
+[gd_scene load_steps=70 format=3 uid="uid://3mfb0sd1gh76"]
 
 [ext_resource type="Texture2D" uid="uid://cijdeq4s63sbc" path="res://Assets/characters/elf/idle/0_Dark_Elves_Idle_000.png" id="1_2774g"]
+[ext_resource type="Script" path="res://Scripts/Characters/Player.cs" id="1_bn1dw"]
 [ext_resource type="Texture2D" uid="uid://cln1ubxiy43oh" path="res://Assets/characters/elf/double_jump_start/0_Dark_Elves_Double Jump_000.png" id="1_u8dan"]
 [ext_resource type="Texture2D" uid="uid://n7mnms3u3wjr" path="res://Assets/characters/elf/double_jump_start/0_Dark_Elves_Double Jump_001.png" id="2_cc384"]
 [ext_resource type="Texture2D" uid="uid://bkteqb4eah0qa" path="res://Assets/characters/elf/idle/0_Dark_Elves_Idle_001.png" id="2_jng33"]
@@ -302,6 +303,8 @@ animations = [{
 }]
 
 [node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_bn1dw")
+movementSpeed = 305.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -28)
