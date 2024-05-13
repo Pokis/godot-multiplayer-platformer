@@ -12,5 +12,12 @@ namespace godotmultiplayerplatformer.Scripts.General
         public const string INPUT_MOVE_RIGHT = "MoveRight";
         public const string INPUT_JUMP = "Jump";
         public const string INPUT_INTERACT = "Interact";
+
+        public const string ANIMATION_FALL = "Fall";
+        public const string ANIMATION_IDLE = "Idle";
+        public const string ANIMATION_DOUBLE_JUMP_START = "DoubleJumpStart";
+        public const string ANIMATION_JUMP = "Jump";
+        public const string ANIMATION_JUMP_START = "JumpStart";
+        public const string ANIMATION_Walk = "Walk";
     }
 }

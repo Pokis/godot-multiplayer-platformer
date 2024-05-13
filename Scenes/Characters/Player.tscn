@@ -302,9 +302,10 @@ animations = [{
 "speed": 24.0
 }]
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("playerSprite")]
 script = ExtResource("1_bn1dw")
 movementSpeed = 305.0
+playerSprite = NodePath("AnimatedSprite2D")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -28)
