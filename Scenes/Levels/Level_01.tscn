@@ -84,18 +84,17 @@ motion_scale = Vector2(0.25, 1)
 motion_mirroring = Vector2(1334, 0)
 
 [node name="BackgroundTrees" type="Sprite2D" parent="Environment/ParallaxBackground/ParallaxTreeLayer"]
-position = Vector2(-437, -435)
+position = Vector2(-544, -420)
 scale = Vector2(1, 0.923)
 texture = ExtResource("3_afjed")
 centered = false
 
 [node name="ParallaxHouses" type="ParallaxLayer" parent="Environment/ParallaxBackground"]
-position = Vector2(949, -95)
 motion_scale = Vector2(0.6, 1)
 motion_mirroring = Vector2(1334, 0)
 
 [node name="BakgroundHouses" type="Sprite2D" parent="Environment/ParallaxBackground/ParallaxHouses"]
-position = Vector2(-1388, -390)
+position = Vector2(-543, -482)
 texture = ExtResource("4_a4yff")
 centered = false
 
