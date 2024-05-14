@@ -37,22 +37,6 @@ public partial class Player : CharacterBody2D
         AddCameraToPlayer();
     }
 
-    private void AddCameraToPlayer()
-    {
-        cameraInstance = playerCamera.Instantiate<Camera2D>();
-        cameraInstance.GlobalPosition = new Vector2(cameraInstance.GlobalPosition.X, cameraHeight);
-        //TODO: See if there are better ways to add child with deferred call in c#,
-        //as this GetTree().CurrentScene.AddChild(cameraInstance); doesnt work
-        GetTree().CurrentScene.CallDeferred("add_child", cameraInstance);
-    }
-
-    public override void _Process(double delta)
-    {
-        base._Process(delta);
-        cameraInstance.GlobalPosition = new Vector2(this.GlobalPosition.X, cameraHeight);
-
-    }
-
     public override void _PhysicsProcess(double delta)
 	{
         var horizontalInput = Input.GetActionStrength(Constants.INPUT_MOVE_RIGHT) 
@@ -61,6 +45,14 @@ public partial class Player : CharacterBody2D
         float xVelocity = horizontalInput * movementSpeed;
         float yVelocity = Velocity.Y + gravity;
 
+        HandleMovementState(xVelocity, yVelocity);
+        MoveAndSlide();
+
+        FaceMovementDirection(horizontalInput);
+	}
+
+    private void HandleMovementState(float xVelocity, float yVelocity)
+    {
         var isFalling = Velocity.Y > 0 && !IsOnFloor();
         var isJumping = Input.IsActionJustPressed(Constants.INPUT_JUMP) && IsOnFloor();
         var isDoubleJumping = Input.IsActionJustPressed(Constants.INPUT_JUMP) && isFalling;
@@ -70,18 +62,39 @@ public partial class Player : CharacterBody2D
 
         if (isJumping)
         {
+            playerSprite.Play(Constants.ANIMATION_JUMP_START);
+        }
+        if (isDoubleJumping)
+        {
+            playerSprite.Play(Constants.ANIMATION_DOUBLE_JUMP_START);
+        }
+        else if (isWalking)
+        {
+            playerSprite.Play(Constants.ANIMATION_Walk);
+        }
+        else if (isFalling)
+        {
+            playerSprite.Play(Constants.ANIMATION_FALL);
+        }
+        else if (isIdle)
+        {
+            playerSprite.Play(Constants.ANIMATION_IDLE);
+        }
+
+        if (isJumping)
+        {
             jumpCount++;
             yVelocity = -jumpStrength;
         }
-        else if ( isDoubleJumping)
+        else if (isDoubleJumping)
         {
             jumpCount++;
-            if(jumpCount <= maxJumps)
+            if (jumpCount <= maxJumps)
             {
                 yVelocity = -jumpStrength;
             }
         }
-        else if(isJumpCancelled)
+        else if (isJumpCancelled)
         {
             yVelocity = 0;
         }
@@ -92,45 +105,16 @@ public partial class Player : CharacterBody2D
         }
 
         Velocity = new Vector2(xVelocity, yVelocity);
+    }
 
-        MoveAndSlide();
-
-        if(isJumping)
-        {
-            GD.Print($"Playing " + Constants.ANIMATION_JUMP_START);
-            playerSprite.Play(Constants.ANIMATION_JUMP_START);
-        }
-        if (isDoubleJumping)
-        {
-            GD.Print($"Playing " + Constants.ANIMATION_DOUBLE_JUMP_START);
-            playerSprite.Play(Constants.ANIMATION_DOUBLE_JUMP_START);
-        }
-        else if(isWalking)
-        {
-
-            GD.Print($"Playing " + Constants.ANIMATION_Walk);
-            playerSprite.Play(Constants.ANIMATION_Walk);
-        }
-        else if (isFalling)
-        {
-
-            GD.Print($"Playing " + Constants.ANIMATION_FALL);
-            playerSprite.Play(Constants.ANIMATION_FALL);
-        }
-        else if (isIdle)
-        {
-            GD.Print($"Playing " + Constants.ANIMATION_IDLE);
-            playerSprite.Play(Constants.ANIMATION_IDLE);
-        }
-
-
-
+    private void FaceMovementDirection(float horizontalInput)
+    {
         if (Mathf.IsZeroApprox(horizontalInput))
         {
             return;
         }
 
-        if(horizontalInput < 0)
+        if (horizontalInput < 0)
         {
             playerSprite.Scale = new Vector2(-initialSpriteScale.X, initialSpriteScale.Y);
         }
@@ -138,11 +122,30 @@ public partial class Player : CharacterBody2D
         {
             playerSprite.Scale = initialSpriteScale;
         }
-	}
-
+    }
 
     private void PlayerSprite_AnimationFinished()
     {
         playerSprite.Play(Constants.ANIMATION_JUMP);
+    }
+
+    private void AddCameraToPlayer()
+    {
+        cameraInstance = playerCamera.Instantiate<Camera2D>();
+        cameraInstance.GlobalPosition = new Vector2(cameraInstance.GlobalPosition.X, cameraHeight);
+        //TODO: See if there are better ways to add child with deferred call in c#,
+        //as this GetTree().CurrentScene.AddChild(cameraInstance); doesnt work
+        GetTree().CurrentScene.CallDeferred("add_child", cameraInstance);
+    }
+
+    private void UpdateCamera()
+    {
+        cameraInstance.GlobalPosition = new Vector2(this.GlobalPosition.X, cameraHeight);
+    }
+
+    public override void _Process(double delta)
+    {
+        base._Process(delta);
+        UpdateCamera();
     }
 }
