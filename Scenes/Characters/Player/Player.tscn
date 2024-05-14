@@ -306,6 +306,7 @@ animations = [{
 [node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("playerSprite")]
 script = ExtResource("1_bn1dw")
 movementSpeed = 305.0
+maxJumps = 5
 playerSprite = NodePath("AnimatedSprite2D")
 playerCamera = ExtResource("2_3pvmx")
 
