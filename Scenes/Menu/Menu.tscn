@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://bd5jkstdg3hxc"]
+[gd_scene load_steps=5 format=3 uid="uid://bd5jkstdg3hxc"]
 
 [ext_resource type="Texture2D" uid="uid://bja0wl8tcw71c" path="res://Assets/backgrounds/background_01.png" id="1_4pk21"]
+[ext_resource type="Script" path="res://Scripts/UI/Menu.cs" id="1_n5ixb"]
 [ext_resource type="Texture2D" uid="uid://bujx43rcy5b85" path="res://Assets/backgrounds/background_02.png" id="2_7py5d"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_si3vy"]
@@ -8,13 +9,18 @@ font_size = 64
 outline_size = 3
 outline_color = Color(0.0177324, 0.0177324, 0.0177324, 1)
 
-[node name="Menu" type="Control"]
+[node name="Menu" type="Control" node_paths=PackedStringArray("HostButtonNode", "StartButtonNode", "JoinButtonNode", "IpAddressLineEditNode")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_n5ixb")
+HostButtonNode = NodePath("HBoxContainer/HostButton")
+StartButtonNode = NodePath("HBoxContainer/StartButton")
+JoinButtonNode = NodePath("HBoxContainer/JoinButton")
+IpAddressLineEditNode = NodePath("HBoxContainer/IpLineEdit")
 
 [node name="BackgroundTrees" type="TextureRect" parent="."]
 layout_mode = 1

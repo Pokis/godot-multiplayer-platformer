@@ -15,6 +15,10 @@ run/main_scene="res://Scenes/Menu/Menu.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+Lobby="*res://Scripts/Multiplayer/Lobby.cs"
+
 [display]
 
 window/size/resizable=false
