@@ -45,11 +45,13 @@ namespace godotmultiplayerplatformer.Scripts.Multiplayer
 
         private void Multiplayer_PeerDisconnected(long id)
         {
+            GD.Print($"Peer {id} disconnected");
             RemovePlayer(id);
         }
 
         private void Multiplayer_PeerConnected(long id)
         {
+            GD.Print($"Peer {id} connected");
             AddPlayer(id);
         }
 
@@ -58,12 +60,11 @@ namespace godotmultiplayerplatformer.Scripts.Multiplayer
             var peer = new ENetMultiplayerPeer();
             var error = peer.CreateServer(PORT, MAX_CONNECTIONS);
             
-            if(error != null)
+            if(error != Error.Ok)
             {
-                GD.Print(error);
+                GD.Print($"Error when creating server: {error}");
+                throw new Exception("Error when creating server");
             }
-
-            GD.Print(error);
 
             Multiplayer.MultiplayerPeer = peer;
 

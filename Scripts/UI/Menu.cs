@@ -36,7 +36,12 @@ public partial class Menu : Control
 
     private void HostButtonNode_Pressed()
     {
-        Lobby.CreateGame();
+        var lobby = GetTree().Root.GetChild<Lobby>(0);
+        if(lobby != null)
+        {
+            GD.Print("Found the lobby, creating game.");
+            lobby.CreateGame();
+        }
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
