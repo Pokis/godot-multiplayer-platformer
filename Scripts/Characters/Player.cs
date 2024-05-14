@@ -20,15 +20,38 @@ public partial class Player : CharacterBody2D
     [Export]
     private AnimatedSprite2D playerSprite;
 
+    [Export]
+    private PackedScene playerCamera;
+
+    [Export]
+    private float cameraHeight = 20;
+
     private Vector2 initialSpriteScale;
     private int jumpCount = 0;
+    private Camera2D cameraInstance;
     public override void _Ready()
     {
         base._Ready();
         initialSpriteScale = playerSprite.Scale;
         playerSprite.AnimationFinished += PlayerSprite_AnimationFinished;
+        AddCameraToPlayer();
     }
 
+    private void AddCameraToPlayer()
+    {
+        cameraInstance = playerCamera.Instantiate<Camera2D>();
+        cameraInstance.GlobalPosition = new Vector2(cameraInstance.GlobalPosition.X, cameraHeight);
+        //TODO: See if there are better ways to add child with deferred call in c#,
+        //as this GetTree().CurrentScene.AddChild(cameraInstance); doesnt work
+        GetTree().CurrentScene.CallDeferred("add_child", cameraInstance);
+    }
+
+    public override void _Process(double delta)
+    {
+        base._Process(delta);
+        cameraInstance.GlobalPosition = new Vector2(this.GlobalPosition.X, cameraHeight);
+
+    }
 
     public override void _PhysicsProcess(double delta)
 	{

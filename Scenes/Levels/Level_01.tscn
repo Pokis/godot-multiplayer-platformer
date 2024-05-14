@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://4er4w1kxso7j"]
 
 [ext_resource type="Texture2D" uid="uid://chwbcf7n2ajtp" path="res://Assets/platforms/Platformer_spritesheet.png" id="1_qthw0"]
-[ext_resource type="PackedScene" uid="uid://3mfb0sd1gh76" path="res://Scenes/Characters/Player.tscn" id="2_polwe"]
+[ext_resource type="PackedScene" uid="uid://3mfb0sd1gh76" path="res://Scenes/Characters/Player/Player.tscn" id="2_polwe"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xonq3"]
 texture = ExtResource("1_qthw0")
@@ -75,7 +75,4 @@ layer_0/tile_data = PackedInt32Array(196609, 131072, 2, 196610, 131072, 2, 19661
 
 [node name="Player" parent="TileMap" instance=ExtResource("2_polwe")]
 position = Vector2(244, 384)
-
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(296, 86)
-zoom = Vector2(1.5, 1.5)
+scale = Vector2(2, 2)
