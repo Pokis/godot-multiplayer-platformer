@@ -9,7 +9,7 @@ font_size = 64
 outline_size = 3
 outline_color = Color(0.0177324, 0.0177324, 0.0177324, 1)
 
-[node name="Menu" type="Control" node_paths=PackedStringArray("HostButtonNode", "StartButtonNode", "JoinButtonNode", "IpAddressLineEditNode")]
+[node name="Menu" type="Control" node_paths=PackedStringArray("HostButtonNode", "StartButtonNode", "JoinButtonNode", "IpAddressLineEditNode", "StatusLabel")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,6 +21,7 @@ HostButtonNode = NodePath("HBoxContainer/HostButton")
 StartButtonNode = NodePath("HBoxContainer/StartButton")
 JoinButtonNode = NodePath("HBoxContainer/JoinButton")
 IpAddressLineEditNode = NodePath("HBoxContainer/IpLineEdit")
+StatusLabel = NodePath("StatusLabel")
 
 [node name="BackgroundTrees" type="TextureRect" parent="."]
 layout_mode = 1
