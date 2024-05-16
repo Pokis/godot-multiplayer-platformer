@@ -5,8 +5,8 @@ using System.Linq;
 public partial class Level : Node2D
 {
     [Export]
-    private Node2D PlayersContainer {  get; set; }
-    
+    private Node2D PlayersContainer { get; set; }
+
     [Export]
     private PackedScene PlayerScene { get; set; }
 
@@ -18,7 +18,7 @@ public partial class Level : Node2D
     public override void _Ready()
     {
         base._Ready();
-        
+
         if (!Multiplayer.IsServer())
         {
             return;
@@ -37,6 +37,11 @@ public partial class Level : Node2D
 
     public void ExitTree()
     {
+        if (Multiplayer.MultiplayerPeer == null)
+        {
+            return;
+        }
+
         if (!Multiplayer.IsServer())
         {
             return;
