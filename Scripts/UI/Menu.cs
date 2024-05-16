@@ -2,7 +2,7 @@ using Godot;
 using godotmultiplayerplatformer.Scripts.Multiplayer;
 using System;
 
-public partial class Menu : Control
+public partial class Menu : Node
 {
 	[Export]
 	private Button HostButtonNode { get; set; }
@@ -18,6 +18,21 @@ public partial class Menu : Control
 
     [Export]
     private Label StatusLabel { get; set; }
+
+    [Export]
+    private Node LevelContainerNode { get; set; }
+
+    [Export]
+    private PackedScene LevelScene { get; set; }
+
+    [Export]
+    private HBoxContainer NotConnectedHboxNode { get; set; }
+
+    [Export]
+    private HBoxContainer HostHboxNode { get; set; }
+
+    [Export]
+    private Control UI { get; set; }
 
 
     // Called when the node enters the scene tree for the first time.
@@ -38,10 +53,25 @@ public partial class Menu : Control
     private void Multiplayer_ConnectionFailed()
     {
         StatusLabel.Text = "Connection failed.";
+        NotConnectedHboxNode.Show();
     }
 
     private void StartButtonNode_Pressed()
     {
+        //ChangeLevel(LevelScene);
+        CallDeferred(nameof(ChangeLevel), LevelScene);
+        Rpc(nameof(HideMenu));
+    }
+
+    private void ChangeLevel(PackedScene scene)
+    {
+        foreach (var child in LevelContainerNode.GetChildren())
+        {
+            LevelContainerNode.RemoveChild(child);
+            child.QueueFree();
+        }
+
+        LevelContainerNode.AddChild(scene.Instantiate());
     }
 
     private void JoinButtonNode_Pressed()
@@ -54,6 +84,8 @@ public partial class Menu : Control
             lobby.JoinGame(ipAddress);
             StatusLabel.Text = "Connecting...";
         }
+
+        NotConnectedHboxNode.Hide();
     }
 
     private void HostButtonNode_Pressed()
@@ -65,10 +97,14 @@ public partial class Menu : Control
             lobby.CreateGame();
             StatusLabel.Text = "Host Created!";
         }
+
+        NotConnectedHboxNode.Hide();
+        HostHboxNode.Show();
     }
 
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta)
-	{
-	}
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void HideMenu()
+    {
+        UI.Hide();
+    }
 }

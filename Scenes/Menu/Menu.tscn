@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://bd5jkstdg3hxc"]
+[gd_scene load_steps=6 format=3 uid="uid://bd5jkstdg3hxc"]
 
 [ext_resource type="Texture2D" uid="uid://bja0wl8tcw71c" path="res://Assets/backgrounds/background_01.png" id="1_4pk21"]
 [ext_resource type="Script" path="res://Scripts/UI/Menu.cs" id="1_n5ixb"]
+[ext_resource type="PackedScene" uid="uid://4er4w1kxso7j" path="res://Scenes/Levels/Level_01.tscn" id="2_4oota"]
 [ext_resource type="Texture2D" uid="uid://bujx43rcy5b85" path="res://Assets/backgrounds/background_02.png" id="2_7py5d"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_si3vy"]
@@ -9,21 +10,35 @@ font_size = 64
 outline_size = 3
 outline_color = Color(0.0177324, 0.0177324, 0.0177324, 1)
 
-[node name="Menu" type="Control" node_paths=PackedStringArray("HostButtonNode", "StartButtonNode", "JoinButtonNode", "IpAddressLineEditNode", "StatusLabel")]
+[node name="Menu" type="Node" node_paths=PackedStringArray("HostButtonNode", "StartButtonNode", "JoinButtonNode", "IpAddressLineEditNode", "StatusLabel", "LevelContainerNode", "NotConnectedHboxNode", "HostHboxNode", "UI")]
+script = ExtResource("1_n5ixb")
+HostButtonNode = NodePath("UI/NotConnectedHBox/HostButton")
+StartButtonNode = NodePath("UI/HostHBox/StartButton")
+JoinButtonNode = NodePath("UI/NotConnectedHBox/JoinButton")
+IpAddressLineEditNode = NodePath("UI/NotConnectedHBox/IpLineEdit")
+StatusLabel = NodePath("UI/StatusLabel")
+LevelContainerNode = NodePath("Level")
+LevelScene = ExtResource("2_4oota")
+NotConnectedHboxNode = NodePath("UI/NotConnectedHBox")
+HostHboxNode = NodePath("UI/HostHBox")
+UI = NodePath("UI")
+
+[node name="Level" type="Node" parent="."]
+
+[node name="LevelSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://Scenes/Levels/Level_01.tscn")
+spawn_path = NodePath("../Level")
+spawn_limit = 1
+
+[node name="UI" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_n5ixb")
-HostButtonNode = NodePath("HBoxContainer/HostButton")
-StartButtonNode = NodePath("HBoxContainer/StartButton")
-JoinButtonNode = NodePath("HBoxContainer/JoinButton")
-IpAddressLineEditNode = NodePath("HBoxContainer/IpLineEdit")
-StatusLabel = NodePath("StatusLabel")
 
-[node name="BackgroundTrees" type="TextureRect" parent="."]
+[node name="BackgroundTrees" type="TextureRect" parent="UI"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -34,7 +49,7 @@ texture = ExtResource("1_4pk21")
 expand_mode = 2
 stretch_mode = 4
 
-[node name="BackgroundHouses" type="TextureRect" parent="BackgroundTrees"]
+[node name="BackgroundHouses" type="TextureRect" parent="UI/BackgroundTrees"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -45,7 +60,7 @@ texture = ExtResource("2_7py5d")
 expand_mode = 2
 stretch_mode = 4
 
-[node name="StatusLabel" type="Label" parent="."]
+[node name="StatusLabel" type="Label" parent="UI"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -57,31 +72,39 @@ label_settings = SubResource("LabelSettings_si3vy")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="NotConnectedHBox" type="HBoxContainer" parent="UI"]
 layout_mode = 0
 offset_left = 20.0
 offset_top = 20.0
 offset_right = 720.0
 offset_bottom = 62.0
 
-[node name="StartButton" type="Button" parent="HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Start"
-
-[node name="HostButton" type="Button" parent="HBoxContainer"]
+[node name="HostButton" type="Button" parent="UI/NotConnectedHBox"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Host"
 
-[node name="JoinButton" type="Button" parent="HBoxContainer"]
+[node name="JoinButton" type="Button" parent="UI/NotConnectedHBox"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Join"
 
-[node name="IpLineEdit" type="LineEdit" parent="HBoxContainer"]
+[node name="IpLineEdit" type="LineEdit" parent="UI/NotConnectedHBox"]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "127.0.0.1"
 placeholder_text = "IP Address"
+
+[node name="HostHBox" type="HBoxContainer" parent="UI"]
+visible = false
+layout_mode = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 315.0
+offset_bottom = 62.0
+
+[node name="StartButton" type="Button" parent="UI/HostHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Start"

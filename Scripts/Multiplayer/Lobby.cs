@@ -45,8 +45,6 @@ namespace godotmultiplayerplatformer.Scripts.Multiplayer
         private void Multiplayer_ConnectedToServer()
         {
             var peerId = Multiplayer.GetUniqueId();
-            //players.Add(peerId, new PlayerInformation(peerId));
-            //AddPlayer(peerId);
             GD.Print($"[{Multiplayer.GetUniqueId()}]: {peerId} Connected to server");
         }
 
@@ -65,19 +63,13 @@ namespace godotmultiplayerplatformer.Scripts.Multiplayer
         private void Multiplayer_PeerConnected(long id)
         {
             GD.Print($"[{Multiplayer.GetUniqueId()}]: Peer {id} connected, calling RPC in {Multiplayer.GetUniqueId()}! sending my id of {playerInfo.Id}!");
-            //RpcId(id, nameof(EchoRPC), 420);
-            //var playerInfoJson = System.Text.Json.JsonSerializer.Serialize(playerInfo);
             string playerInfoJson = JsonSerializer.Serialize(playerInfo);
             RpcId(id, nameof(RegisterPlayer), playerInfoJson);
-
-            //GD.Print($"[{Multiplayer.GetUniqueId()}]: Peer {id} connected, Adding him to my internal players list!");
-            //AddPlayer(id);
         }
 
         [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
         private void RegisterPlayer(string playerInfoJson)
         {
-            //var playerInfo = System.Text.Json.JsonSerializer.Deserialize<PlayerInformation>(playerInfoJson);
             PlayerInformation playerInfo = JsonSerializer.Deserialize<PlayerInformation>(playerInfoJson);
             var newPlayerId = Multiplayer.GetRemoteSenderId();
             GD.Print($"[{Multiplayer.GetUniqueId()}]:RPC received!, adding player {newPlayerId}/{playerInfo.Id}:{playerInfo.Name}, Adding him to my internal players list!");
