@@ -1,4 +1,4 @@
-[gd_scene load_steps=71 format=3 uid="uid://3mfb0sd1gh76"]
+[gd_scene load_steps=72 format=3 uid="uid://3mfb0sd1gh76"]
 
 [ext_resource type="Texture2D" uid="uid://cijdeq4s63sbc" path="res://Assets/characters/elf/idle/0_Dark_Elves_Idle_000.png" id="1_2774g"]
 [ext_resource type="Script" path="res://Scripts/Characters/Player.cs" id="1_bn1dw"]
@@ -303,6 +303,20 @@ animations = [{
 "speed": 24.0
 }]
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ddqsq"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("AnimatedSprite2D:animation")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath("AnimatedSprite2D:scale")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+
 [node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("playerSprite")]
 scale = Vector2(0.5, 0.5)
 script = ExtResource("1_bn1dw")
@@ -322,3 +336,6 @@ sprite_frames = SubResource("SpriteFrames_b3o1j")
 animation = &"JumpStart"
 autoplay = "Idle"
 frame_progress = 0.369982
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_ddqsq")

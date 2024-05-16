@@ -29,16 +29,33 @@ public partial class Player : CharacterBody2D
     private Vector2 initialSpriteScale;
     private int jumpCount = 0;
     private Camera2D cameraInstance;
-    public override void _Ready()
+    private int ownerId = 1;
+    public override void _EnterTree()
     {
-        base._Ready();
+        base._EnterTree();
         initialSpriteScale = playerSprite.Scale;
         playerSprite.AnimationFinished += PlayerSprite_AnimationFinished;
+        
+
+        GD.Print($"My name is: {Name}");
+        ownerId = int.Parse(Name);
+        SetMultiplayerAuthority(ownerId);
+
+        if(ownerId != Multiplayer.GetUniqueId())
+        {
+            return;
+        }
+
         AddCameraToPlayer();
     }
 
     public override void _PhysicsProcess(double delta)
 	{
+        if (ownerId != Multiplayer.GetUniqueId())
+        {
+            return;
+        }
+
         var horizontalInput = Input.GetActionStrength(Constants.INPUT_MOVE_RIGHT) 
             - Input.GetActionStrength(Constants.INPUT_MOVE_LEFT);
 
@@ -53,6 +70,7 @@ public partial class Player : CharacterBody2D
 
     private void HandleMovementState(float xVelocity, float yVelocity)
     {
+
         var isFalling = Velocity.Y > 0 && !IsOnFloor();
         var isJumping = Input.IsActionJustPressed(Constants.INPUT_JUMP) && IsOnFloor();
         var isDoubleJumping = Input.IsActionJustPressed(Constants.INPUT_JUMP) && isFalling;
@@ -145,6 +163,16 @@ public partial class Player : CharacterBody2D
 
     public override void _Process(double delta)
     {
+        if (Multiplayer.MultiplayerPeer == null)
+        {
+            return;
+        }
+
+        if (ownerId != Multiplayer.GetUniqueId())
+        {
+            return;
+        }
+
         base._Process(delta);
         UpdateCamera();
     }

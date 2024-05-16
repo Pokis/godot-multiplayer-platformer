@@ -76,7 +76,8 @@ public partial class Level : Node2D
     private Vector2 GetNextSpawnPoint()
     {
         nextSpawnPoint++;
-        nextSpawnPoint = Mathf.Wrap(nextSpawnPoint, 1, SpawnPoints.Length + 1);
+        nextSpawnPoint = Mathf.Wrap(nextSpawnPoint, 1, SpawnPoints.Length);
+        GD.Print($"Next calculated spawn point is: {nextSpawnPoint}");
         var spawnPoint = SpawnPoints[nextSpawnPoint].Position;
 
         return spawnPoint;
